@@ -1,9 +1,12 @@
+import 'package:coronvavirustracker/ListaPaises.dart';
+import 'package:coronvavirustracker/Model/Pais.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 
@@ -16,10 +19,10 @@ class TelaPrincipal extends StatefulWidget {
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
 
-  TextEditingController _controllerPaises = TextEditingController();
 
 
   _atualizarMundo() async {
+
 
     String url = "https://api.thevirustracker.com/free-api?global=stats";
 
@@ -37,39 +40,37 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
     print("rodei");
 
-
     setState(() {
+
       nomePais = "World";
       totalCasos = f.format(retorno["results"][0]["total_cases"]).toString();
       totalObitos = f.format(retorno["results"][0]["total_deaths"]).toString();
       letalidade = f2.format( ((retorno["results"][0]["total_deaths"]) / (retorno["results"][0]["total_cases"]))*100).toString() + "%";
-      childBandeira = Image.asset("imagens/mundo.png", width: 65,height: 65,);
+      childBandeira = Image.asset("imagens/mundo.png", width: 60,height: 60,);
       var now = DateTime.now();
       horaAtualizacao = d.format(now);
 
     });
-
-
-
-
-  }
-
-  _atualizarDropList() async{
-
-    String url = "https://api.thevirustracker.com/free-api?countryTotals=ALL";
 
   }
 
 
   _atualizarCasos() async{
 
-    String country = dropdownValue;
+    String country = _textoSalvo;
+    print("checando: $country");
+
+    if (country == "-"){
+      return _atualizarMundo();
+    }
+
+
     String url = "https://api.thevirustracker.com/free-api?countryTotal=" + country;
 
     http.Response response;
     response = await http.get(url);
     Map<String, dynamic> retorno = json.decode(response.body);
-    dynamic countryCode = retorno[dropdownValue];
+    //dynamic countryCode = retorno[dropdownValue];
     String testeChave = retorno["countrydata"][0]["info"]["title"].toString();
    // String testeChave = retorno["countrydata"]["info"]["title"].toString();
     print("O país éeee: " + testeChave);
@@ -77,6 +78,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     //Mascara para formatação dos milhares
     var f = NumberFormat('#,###', "pt_BR");
     var f2 = NumberFormat('##.##', "pt_BR");
+    var d = DateFormat('hh:mm d/MM','pt_BR');
 
     setState(() {
       nomePais = retorno["countrydata"][0]["info"]["title"].toString();
@@ -85,34 +87,30 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       letalidade = f2.format( ((retorno["countrydata"][0]["total_deaths"]) / (retorno["countrydata"][0]["total_cases"]))*100).toString() + "%";
       urlBandeira = "https://www.countryflags.io/" + country + "/shiny/64.png";
       childBandeira = Image.network(urlBandeira);
-
-      /*Widget childImage;
-      try{
-        childImage = Image.network(urlBandeira);
-        print("deu bom");
-        return  childBandeira = childImage;
-      } on Error {
-
-        childImage = Image.network("https://www.countryflags.io/AR/shiny/64.png");
-        print("deu ruim");
-        return childBandeira = childImage;
-      }*/
-
-
-
-
+      var now = DateTime.now();
+      horaAtualizacao = d.format(now);
 
 
     });
 
 
+  }
+
+
+  _recuperar() async{
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _textoSalvo = prefs.getString("code") ?? "-";
+      print("texto lido: $_textoSalvo");
+      _atualizarCasos();
+    });
 
   }
 
 
-
   //Variáveis iniciais
-  String dropdownValue = "BR";
+ // String dropdownValue = "-";
+  String _textoSalvo = "";
   String nomePais ="-";
   String totalCasos = "-";
   String totalObitos = "-";
@@ -122,12 +120,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   String horaAtualizacao = "--:-- --/--";
   DateFormat formatoHora;
   DateFormat formatoData;
+  //var paises = ["-"]; //["BR", "US", "AU", "CA","CH","CL","CN","DK","EU","GB","HK","IN","IS","JP","KR","NZ","PL","RU","SE","SG","TH","TW"]
+ // List _paises =[];
+ // var _codigoPais = ["-"];
+
 
   @override
   void initState() {
     initializeDateFormatting("pt_BR");
-    _atualizarMundo();
-
+    _recuperar();
 
   }
 
@@ -135,10 +136,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
 
 
-
-
   Widget build(BuildContext context) {
-
 
 
     return Scaffold(
@@ -231,28 +229,25 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                               fontFamily: "Righteous",
                             ),
                           ),
-                          DropdownButton<String>(
-                            value: dropdownValue,
-                            onChanged: (String newValue){
-                              setState(() {
-                                dropdownValue = newValue;
-                                _atualizarCasos();
-                              });
-                            },
-                            items: <String>["BR", "US", "AU", "CA","CH","CL","CN","DK","EU","GB","HK","IN","IS","JP","KR","NZ","PL","RU","SE","SG","TH","TW"].map<DropdownMenuItem<String>>((String value){
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                    fontSize: 40,
-                                    fontFamily: "Daysone",
-                                    color: Color(0xff59AA91),
-                                  ),
+                          FlatButton(
+                              onPressed: (){
+                                setState(() {
+                                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> ListaPaises()));
+                                  //dropdownValue = newValue;
+                                  //_atualizarCasos();
+                                });
+
+                              },
+                              child: Text(
+                                _textoSalvo,
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontFamily: "Daysone",
+                                  color: Color(0xff59AA91),
                                 ),
-                              );
-                            }).toList(),
-                          ),
+                              )
+                          )
+                          ,
                           Text(
                             nomePais,
                             style: TextStyle(
@@ -299,7 +294,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                            totalCasos,
                            style: TextStyle(
                              //fontWeight: FontWeight.bold,
-                             fontSize: 40,
+                             fontSize: 35,
                              fontFamily: "Daysone",
                              color: Color(0xff6978FC),
                            ),
@@ -349,7 +344,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   totalObitos,
                                   style: TextStyle(
                                     //fontWeight: FontWeight.bold,
-                                    fontSize: 33,
+                                    fontSize: 31,
                                     fontFamily: "Daysone",
                                     color: Color(0xffE4B949),
                                   ),
@@ -387,7 +382,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   letalidade,
                                   style: TextStyle(
                                     //fontWeight: FontWeight.bold,
-                                    fontSize: 33,
+                                    fontSize: 31,
                                     fontFamily: "Daysone",
                                     color: Color(0xffCD5075),
                                   ),

@@ -1,22 +1,30 @@
 import 'package:coronvavirustracker/Model/Pais.dart';
+import 'package:coronvavirustracker/TelaPrincipal.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:getflutter/getflutter.dart';
 
 class ListaPaises extends StatefulWidget {
-  String pesquisa;
-  ListaPaises(this.pesquisa);
-  int contagemPaises = 0;
+
+
 
   @override
   _ListaPaisesState createState() => _ListaPaisesState();
 }
 
 class _ListaPaisesState extends State<ListaPaises> {
+
+  List _paises = [];
+
+
   _CarregarPaises() async {
+    _paises.add(Pais(title: "World", code: "-"));
     String id;
     String title;
     String code;
+
 
     String url = "https://api.thevirustracker.com/free-api?countryTotals=ALL";
     http.Response response;
@@ -32,25 +40,40 @@ class _ListaPaisesState extends State<ListaPaises> {
     print("VAIII: " + testeChave);
 
 
-    List<Pais> paises = retorno["countryitems"][0].map<Pais>((map) {
-      return Pais.fromJson(map);
-    }).toList();
 
-    print("resultado lista:" +paises.toString());
-
-
-    /*for (var i = 1; i < totalPaises; i++){
-      print("Nome pais: " + retorno["countryitems"][0][i.toString()]["title"].toString());
+    for (var i = 1; i < totalPaises; i++){
+      //print("Nome pais: " + retorno["countryitems"][0][i.toString()]["title"].toString());
       id = retorno["countryitems"][0][i.toString()]["ourid"].toString();
       title = retorno["countryitems"][0][i.toString()]["title"].toString();
       code = retorno["countryitems"][0][i.toString()]["code"].toString();
-      print("ID: $id Paisao: $title Paisin: $code");
+     // print("ID: $id Paisao: $title Paisin: $code");
 
-      //paises.add(Pais(title, code));
-    }*/
+      setState(() {
+        _paises.add(Pais(title: title, code: code));
+      });
+
+
+    }
+      print("sera: " + _paises[1].title);
+
+  }
+
+  TextEditingController _controllerPais = TextEditingController();
+  String paisEscolhido = "-";
+
+  _salvar() async{
+
+    String paisSelecionado = paisEscolhido;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString("code", paisSelecionado);
+    print("Salvar: $paisSelecionado");
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> TelaPrincipal()));
 
 
   }
+
+
 
   @override
   void initState() {
@@ -59,6 +82,8 @@ class _ListaPaisesState extends State<ListaPaises> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white, opacity: 1),
@@ -94,40 +119,46 @@ class _ListaPaisesState extends State<ListaPaises> {
           ],
         ),
       ),
-      body: Container(),
-    );
-
-    /*return Container(
-      child: FutureBuilder<List<InfoPais>>(
-        future: _ListarPaises(widget.pesquisa),//valor passado para o metodo da api realizar o filtro
-        builder: (context,snapshot){
-          return ListView.separated(
-            itemBuilder: (ccntext, index){
-              List<InfoPais> paises = snapshot.data;
-              InfoPais pais = paises[index];
-
-              return GestureDetector(
-                onTap: (){},
-                child: Row(
-                  children: <Widget>[
-                    Text("Bandeira"),
-                    ListTile(
-                      title: Text("Nome grande pais"),
-                      subtitle: Text("Sigla pais"),
+      body: Container(
+        child: ListView.separated(
+            itemBuilder: (context, indice){
+              return ListTile(
+                leading: GFAvatar(
+                  backgroundImage: NetworkImage("https://www.countryflags.io/" + _paises[indice].code.toString() + "/shiny/64.png") ?? Image.asset("imagens/mundo.png"),
+                  backgroundColor: Colors.white,
+                  shape: GFAvatarShape.standard,
+                ),
+                onTap: (){
+                  print("pais: " + _paises[indice].title);
+                  setState(() {
+                    paisEscolhido = _paises[indice].code.toString();
+                  });
+                  _salvar();
+                },
+                title: Text(
+                  _paises[indice].title,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontFamily: "Righteous",
                     )
-                  ],
+                ) ,
+                subtitle: Text(
+                    _paises[indice].code,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontFamily: "Righteous",
+                    )
                 ),
               );
             },
-            separatorBuilder: (context,index) => Divider(
+            separatorBuilder: (context,indice) => Divider(
               height: 2,
               color: Colors.grey,
             ),
-            itemCount: 10, //tamanho da lista
-          );
-
-        },
+            itemCount: _paises.length
+        ),
       ),
-    );*/
+    );
+
   }
 }

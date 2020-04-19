@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
                   child: Text(
                     "CORONAVIRUS TRACKER",
                     style: TextStyle(
-                      fontSize: 30,
+                      fontSize: 26,
                       color: Color(0xff598747),
                       fontWeight: FontWeight.bold,
                       fontFamily: "Righteous",
@@ -53,8 +53,8 @@ class _HomeState extends State<Home> {
                     onPressed: (){
 
                       Navigator.pushReplacement(context,
-                        //  MaterialPageRoute(builder: (context)=> TelaPrincipal()));
-                          MaterialPageRoute(builder: (context)=> ListaPaises(pesquisa)));
+                          MaterialPageRoute(builder: (context)=> TelaPrincipal()));
+                        //  MaterialPageRoute(builder: (context)=> ListaPaises(pesquisa)));
 
                     },
                   ),
