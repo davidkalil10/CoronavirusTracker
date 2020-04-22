@@ -55,10 +55,11 @@ class _ListaPaisesState extends State<ListaPaises> {
 
     }
       print("sera: " + _paises[1].title);
+    itemsNew.addAll(_paises);
 
   }
 
-  TextEditingController _controllerPais = TextEditingController();
+  TextEditingController editingController = TextEditingController();
   String paisEscolhido = "-";
 
   _salvar() async{
@@ -70,14 +71,55 @@ class _ListaPaisesState extends State<ListaPaises> {
     print("Salvar: $paisSelecionado");
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> TelaPrincipal()));
 
-
   }
 
+  var items = List<String>();
+  List itemsNew = [];
+  var duplicateItems = List<String>();
 
+  void resultadoPesquisa (String query){
+
+    //List<String> dummySearchList = List<String>();
+    List dummySearchList = [];
+    dummySearchList.addAll(_paises);
+
+    if(query.isNotEmpty){
+      List dummyListData = [];
+      print("tamanho: " + dummySearchList.length.toString());
+      for (var i = 0; i <= dummySearchList.length; i++){
+        if(dummySearchList[i].title.toLowerCase().contains(query.toLowerCase())){
+          //print("resultado: " + dummySearchList[i].title);
+          dummyListData.add(dummySearchList[i]);
+         print("encontrados: " +dummyListData.length.toString());
+         setState(() {
+
+           itemsNew.clear();
+           itemsNew.addAll(dummyListData);
+
+         });
+
+
+          //print("achei: " + dummyListData[i].title);
+          //print("achei: " + dummySearchList[i]);
+        }
+      }
+
+      return;
+
+    } else {
+      setState(() {
+        itemsNew.clear();
+        itemsNew.addAll(_paises);
+      });
+    }
+
+  }
 
   @override
   void initState() {
     _CarregarPaises();
+    //items.addAll(duplicateItems);
+
   }
 
   @override
@@ -120,42 +162,65 @@ class _ListaPaisesState extends State<ListaPaises> {
         ),
       ),
       body: Container(
-        child: ListView.separated(
-            itemBuilder: (context, indice){
-              return ListTile(
-                leading: GFAvatar(
-                  backgroundImage: NetworkImage("https://www.countryflags.io/" + _paises[indice].code.toString() + "/shiny/64.png") ?? Image.asset("imagens/mundo.png"),
-                  backgroundColor: Colors.white,
-                  shape: GFAvatarShape.standard,
-                ),
-                onTap: (){
-                  print("pais: " + _paises[indice].title);
-                  setState(() {
-                    paisEscolhido = _paises[indice].code.toString();
-                  });
-                  _salvar();
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: TextField(
+                onChanged: (value){
+                  resultadoPesquisa(value);
                 },
-                title: Text(
-                  _paises[indice].title,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "Righteous",
-                    )
-                ) ,
-                subtitle: Text(
-                    _paises[indice].code,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontFamily: "Righteous",
-                    )
+                controller: editingController,
+                decoration: InputDecoration(
+                  labelText: "Pesquisa",
+                  hintText: "Pesquisa",
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(25))
+                  )
                 ),
-              );
-            },
-            separatorBuilder: (context,indice) => Divider(
-              height: 2,
-              color: Colors.grey,
+              ),
             ),
-            itemCount: _paises.length
+            Expanded(
+              child: ListView.separated(
+                  itemBuilder: (context, indice){
+                    return ListTile(
+                      leading: GFAvatar(
+                        backgroundImage: NetworkImage("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png") ?? Image.asset("imagens/mundo.png"),
+                        backgroundColor: Colors.white,
+                        shape: GFAvatarShape.standard,
+                      ),
+                      onTap: (){
+                        print("pais: " + itemsNew[indice].title);
+                        setState(() {
+                          paisEscolhido = itemsNew[indice].code.toString();
+                        });
+                        _salvar();
+                      },
+                      title: Text(
+                          itemsNew[indice].title,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "Righteous",
+                          )
+                      ) ,
+                      subtitle: Text(
+                          itemsNew[indice].code,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontFamily: "Righteous",
+                          )
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context,indice) => Divider(
+                    height: 2,
+                    color: Colors.grey,
+                  ),
+                  itemCount: itemsNew.length
+              ),
+            )
+          ],
         ),
       ),
     );

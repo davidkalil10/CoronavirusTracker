@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:coronvavirustracker/Model/Timeline.dart';
 import 'package:coronvavirustracker/ListaPaises.dart';
 import 'package:coronvavirustracker/Model/Pais.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +140,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   Widget build(BuildContext context) {
 
+    double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.53: 0.38 );
+    Widget graficos = Timeline();
+
 
     return Scaffold(
       appBar: AppBar(
@@ -176,229 +181,253 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         ),
       ),
       body: Scaffold(
-        body: Column(
-          children: <Widget>[
-           Padding(
-             padding: EdgeInsets.only(top: 10,right: 10,left: 10),
-             child: Material(
-               child: Column(
-                 children: <Widget>[
-                   Text(
-                       "Última Atualização",
-                     style: TextStyle(
-                       fontWeight: FontWeight.bold,
-                       fontSize: 15,
-                       fontFamily: "Righteous",
-                       color: Color(0xffA6AEB7),
-                     ),
-                   ),
-                   Text(
-                     horaAtualizacao,
-                     style: TextStyle(
-                       fontWeight: FontWeight.bold,
-                       fontSize: 20,
-                       fontFamily: "Daysone",
-                     ),
-                   )
-                 ],
-               ),
-             ),
-           ),
-            //Seleção do país
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Material(
-                color: Colors.white,
-                elevation: 14.0,
-                borderRadius: BorderRadius.circular(24),
-                shadowColor: Color(0x802196f3),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(20),
+        body: Container(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10,right: 10,left: 10),
+                    child: Material(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "Selecione o país",
+                            "Última Atualização",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              fontFamily: "Righteous",
+                              color: Color(0xffA6AEB7),
+                            ),
+                          ),
+                          Text(
+                            horaAtualizacao,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                              fontFamily: "Righteous",
-                            ),
-                          ),
-                          FlatButton(
-                              onPressed: (){
-                                setState(() {
-                                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> ListaPaises()));
-                                  //dropdownValue = newValue;
-                                  //_atualizarCasos();
-                                });
-
-                              },
-                              child: Text(
-                                _textoSalvo,
-                                style: TextStyle(
-                                  fontSize: 40,
-                                  fontFamily: "Daysone",
-                                  color: Color(0xff59AA91),
-                                ),
-                              )
-                          )
-                          ,
-                          Text(
-                            nomePais,
-                            style: TextStyle(
-                              //fontWeight: FontWeight.bold,
-                              fontSize: 18,
                               fontFamily: "Daysone",
-                              color: Color(0xff59AA91),
                             ),
                           )
                         ],
                       ),
                     ),
-                  ],
+                  ),
+                  //Seleção do país
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24),
+                      shadowColor: Color(0x802196f3),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Selecione o país",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontFamily: "Righteous",
+                                  ),
+                                ),
+                                FlatButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> ListaPaises()));
+                                        //dropdownValue = newValue;
+                                        //_atualizarCasos();
+                                      });
 
-                ),
+                                    },
+                                    child: Text(
+                                      _textoSalvo,
+                                      style: TextStyle(
+                                        fontSize: 40,
+                                        fontFamily: "Daysone",
+                                        color: Color(0xff59AA91),
+                                      ),
+                                    )
+                                )
+                                ,
+                                Text(
+                                  nomePais,
+                                  style: TextStyle(
+                                    //fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    fontFamily: "Daysone",
+                                    color: Color(0xff59AA91),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+
+                      ),
+                    ),
+                  ),
+                  //Primeiro Card
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24),
+                      shadowColor: Color(0x802196f3),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Casos Confirmados",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontFamily: "Righteous",
+                                  ),
+                                ),
+                                Text(
+                                  totalCasos,
+                                  style: TextStyle(
+                                    //fontWeight: FontWeight.bold,
+                                    fontSize: 35,
+                                    fontFamily: "Daysone",
+                                    color: Color(0xff6978FC),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: childBandeira,
+                          )
+                        ],
+
+                      ),
+                    ),
+                  ),
+                  //Segundo Card
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Material(
+                            color: Colors.white,
+                            elevation: 14.0,
+                            borderRadius: BorderRadius.circular(24),
+                            shadowColor: Color(0x802196f3),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Óbitos",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          fontFamily: "Righteous",
+                                        ),
+                                      ),
+                                      Text(
+                                        totalObitos,
+                                        style: TextStyle(
+                                          //fontWeight: FontWeight.bold,
+                                          fontSize: 31,
+                                          fontFamily: "Daysone",
+                                          color: Color(0xffE4B949),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+
+                            ),
+                          ),
+                          Material(
+                            color: Colors.white,
+                            elevation: 14.0,
+                            borderRadius: BorderRadius.circular(24),
+                            shadowColor: Color(0x802196f3),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        "Letalidade",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          fontFamily: "Righteous",
+                                        ),
+                                      ),
+                                      Text(
+                                        letalidade,
+                                        style: TextStyle(
+                                          //fontWeight: FontWeight.bold,
+                                          fontSize: 31,
+                                          fontFamily: "Daysone",
+                                          color: Color(0xffCD5075),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Container(
+                      child: Material(
+                          color: Colors.white,
+                          elevation: 14.0,
+                          borderRadius: BorderRadius.circular(24),
+                          shadowColor: Color(0x802196f3),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: (MediaQuery.of(context).size.width*fatorAjusteGrafico),
+                            //height: MediaQuery.of(context).size.height,
+                            child: graficos,
+                          ),
+                      ),
+                    ),
+                  )
+                  //Card gráfico
+                ],
               ),
             ),
-            //Primeiro Card
-            Padding(
-               padding: EdgeInsets.all(20),
-             child: Material(
-               color: Colors.white,
-               elevation: 14.0,
-               borderRadius: BorderRadius.circular(24),
-               shadowColor: Color(0x802196f3),
-               child: Row(
-                 crossAxisAlignment: CrossAxisAlignment.center,
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: <Widget>[
-                   Padding(
-                     padding: EdgeInsets.all(20),
-                     child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: <Widget>[
-                         Text(
-                           "Casos Confirmados",
-                           style: TextStyle(
-                             fontWeight: FontWeight.bold,
-                             fontSize: 20,
-                             fontFamily: "Righteous",
-                           ),
-                         ),
-                         Text(
-                           totalCasos,
-                           style: TextStyle(
-                             //fontWeight: FontWeight.bold,
-                             fontSize: 35,
-                             fontFamily: "Daysone",
-                             color: Color(0xff6978FC),
-                           ),
-                         ),
-                       ],
-                     ),
-                   ),
-                   Padding(
-                     padding: EdgeInsets.only(right: 20),
-                     child: childBandeira,
-                   )
-                 ],
-
-               ),
-             ),
-           ),
-            //Segundo Card
-            Padding(
-              padding: EdgeInsets.all(20),
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24),
-                      shadowColor: Color(0x802196f3),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Óbitos",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    fontFamily: "Righteous",
-                                  ),
-                                ),
-                                Text(
-                                  totalObitos,
-                                  style: TextStyle(
-                                    //fontWeight: FontWeight.bold,
-                                    fontSize: 31,
-                                    fontFamily: "Daysone",
-                                    color: Color(0xffE4B949),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-
-                      ),
-                    ),
-                    Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24),
-                      shadowColor: Color(0x802196f3),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Letalidade",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    fontFamily: "Righteous",
-                                  ),
-                                ),
-                                Text(
-                                  letalidade,
-                                  style: TextStyle(
-                                    //fontWeight: FontWeight.bold,
-                                    fontSize: 31,
-                                    fontFamily: "Daysone",
-                                    color: Color(0xffCD5075),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );

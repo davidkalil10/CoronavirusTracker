@@ -27,6 +27,8 @@ dependencies:
   intl: ^0.16.1
   shared_preferences: ^0.5.2
   getflutter: ^1.0.4
+  date_format: ^1.0.8
+  fl_chart: ^0.9.2
 
 dev_dependencies:
   flutter_test:
