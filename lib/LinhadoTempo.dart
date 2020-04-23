@@ -19,7 +19,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
   List _dadosDiarios = [];
   List<DataPoint> pontosCasos =[];
-  DateTime fromDate = DateTime.utc(2020, DateTime.april, 1); //data inicial da API
+  DateTime fromDate = DateTime.utc(2020, DateTime.february, 22); //data inicial da API
   DateTime toDate = DateTime.now();
 
 
@@ -35,11 +35,11 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
     print("peguei o: $_textoSalvo");
 
     var data;
-    double novosCasos ;
-    double novasMortes ;
-    double totalCasos;
-    double totalMortes ;
-    double totalRecuperacao ;
+    double novosCasos = 0.0;
+    double novasMortes = 0.0;
+    double totalCasos = 0.0;
+    double totalMortes = 0.0;
+    double totalRecuperacao = 0.0;
 
     String country = _textoSalvo;
     print("olha aqui: $country");
@@ -64,16 +64,19 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
     //Loop para adicionar o JSON na memoria
 
-    for (var i = 0; i < diasBase; i++){
+    for (var i = 0; i <= diasBase; i++){
       dataRotativa = fromDate.add(Duration(days: i));
       var dataRotativaString = formatDate(dataRotativa, [m, '/', dd, '/', yy]).toString(); //mudar data para string para fazer a consulta
      // print(dataRotativaString +": " + retorno["timelineitems"][0][dataRotativaString].toString());
 
       //Checa o resultado da pesquisa do dia, se nulo adicionar "" para o daily e repetir o dia anterior
 
-      if (retorno["timelineitems"][0][dataRotativaString].toString() == null){
+      if (retorno["timelineitems"][0][dataRotativaString] == null){
 
         data = dataRotativa;
+        totalCasos = totalCasos;
+        totalMortes = totalMortes;
+        totalRecuperacao = totalRecuperacao;
         novosCasos = 0.0;
         novasMortes = 0.0;
         print("tamanho: " +pontosCasos.length.toString());
@@ -91,7 +94,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
       //Carregar dados na lista da memória e setar no gráfico
       setState(() {
         _dadosDiarios.add(DadoDia(data: data, novosCasos: novosCasos,novasMortes: novasMortes,totalCasos: totalCasos,totalMortes: totalMortes, totalRecuperacao: totalRecuperacao ));
-        pontosCasos.add(DataPoint<DateTime>(value: novosCasos, xAxis: dataRotativa));
+        pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
       });
 
     }
