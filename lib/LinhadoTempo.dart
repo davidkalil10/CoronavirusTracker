@@ -23,7 +23,16 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
   DateTime toDate = DateTime.now();
 
 
-  _atualizarLinhadoTempo() async{
+  Future <bool> _atualizarLinhadoTempo(String textoSalvo) async{
+
+    //recupera shared preferences
+
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _textoSalvo = prefs.getString("code") ?? "-";
+
+    });
+    print("peguei o: $_textoSalvo");
 
     var data;
     double novosCasos ;
@@ -32,8 +41,10 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
     double totalMortes ;
     double totalRecuperacao ;
 
-
-    String url = "https://api.thevirustracker.com/free-api?countryTimeline=br";
+    String country = _textoSalvo;
+    print("olha aqui: $country");
+  //  String url = "https://api.thevirustracker.com/free-api?countryTimeline=br";
+    String url = "https://api.thevirustracker.com/free-api?countryTimeline=" + country;
 
     http.Response response;
     response = await http.get(url);
@@ -53,7 +64,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
     //Loop para adicionar o JSON na memoria
 
-    for (var i = 0; i <= diasBase; i++){
+    for (var i = 0; i < diasBase; i++){
       dataRotativa = fromDate.add(Duration(days: i));
       var dataRotativaString = formatDate(dataRotativa, [m, '/', dd, '/', yy]).toString(); //mudar data para string para fazer a consulta
      // print(dataRotativaString +": " + retorno["timelineitems"][0][dataRotativaString].toString());
@@ -84,64 +95,96 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
       });
 
     }
-
+      return true;
   }
+
+
+
+  //Variáveis iniciais
+  String _textoSalvo = "";
+  Future <bool> _future;
 
 
   @override
   void initState() {
-
+    _future = _atualizarLinhadoTempo(_textoSalvo);
     super.initState();
   }
 
 
   @override
   Widget build(BuildContext context) {
-    _atualizarLinhadoTempo();
-    return Material(
-      child: Center(
-        child: Container(
-          color: Colors.blueGrey,
-           height: MediaQuery.of(context).size.height,
-           width: MediaQuery.of(context).size.width /1.5,
-          child:BezierChart(
-            fromDate: fromDate,
-            bezierChartScale: BezierChartScale.WEEKLY,
-            toDate: toDate,
-            selectedDate: toDate,
-            series: [
-              BezierLine(
-                label: "Casos",
-                onMissingValue: (dateTime){
-                  if(dateTime.day.isEven){
-                    return 10.0;
-                  }
-                  return 5.0;
-                },
-                data: pontosCasos,
-              ),
-            ],
-            config: BezierChartConfig(
-              verticalIndicatorStrokeWidth: 3.0,
-              verticalIndicatorColor: Colors.black26,
-              pinchZoom: true,
-              showVerticalIndicator: true,
-              verticalIndicatorFixedPosition: false,
-              backgroundColor: Colors.green,
-              footerHeight: 30.0,
-              snap: false,
-              displayYAxis: false,
-              //stepsYAxis: 200,
-              xAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              yAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              bubbleIndicatorColor: Colors.black, // cor da caixa de texto
-              bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
-              bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
-              bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
-            ),
-          ),
-        ),
-      ),
+    //_recuperar();
+    return FutureBuilder<bool>(
+        future: _future,
+        builder: (context, snapshot){
+          switch (snapshot.connectionState){
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+              break;
+            case ConnectionState.active:
+            case ConnectionState.done:
+              print("oh: " + snapshot.toString());
+              if (snapshot.hasData){
+                print("apareci");
+                return Material(
+                  child: Center(
+                    child: Container(
+                      color: Colors.blueGrey,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width /1.5,
+                      child:BezierChart(
+                        fromDate: fromDate,
+                        bezierChartScale: BezierChartScale.WEEKLY,
+                        toDate: toDate,
+                        selectedDate: toDate,
+                        series: [
+                          BezierLine(
+                            label: "Casos",
+                            onMissingValue: (dateTime){
+                              if(dateTime.day.isEven){
+                                return 0.0;
+                              }
+                              return 0.0;
+                            },
+                            data: pontosCasos,
+                          ),
+                        ],
+                        config: BezierChartConfig(
+                          verticalIndicatorStrokeWidth: 3.0,
+                          verticalIndicatorColor: Colors.black26,
+                          pinchZoom: true,
+                          showVerticalIndicator: true,
+                          verticalIndicatorFixedPosition: false,
+                          backgroundColor: Colors.green,
+                          footerHeight: 30.0,
+                          snap: false,
+                          displayYAxis: false,
+                          //stepsYAxis: 200,
+                          xAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          yAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          bubbleIndicatorColor: Colors.black, // cor da caixa de texto
+                          bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
+                          bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
+                          bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }else{
+                print("pobre");
+                return Center(
+                  child: Text("Nenhum dado a ser exibido"),
+                );
+              }
+              break;
+          }
+          return Container();
+        }
     );
   }
 }

@@ -410,7 +410,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                  // CircularProgressIndicator(),
                   //Fonte dados
-                  Padding(
+                  /*Padding(
                     padding: EdgeInsets.only(top: 5,left: 20,right: 20),
                     child: Material(
                       color: Colors.white,
@@ -450,9 +450,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
                       ),
                     ),
-                  )
+                  )*/
                   //Card gráfico
-                 /* Padding(
+                  Padding(
                     padding: EdgeInsets.all(20),
                     child: Container(
                       child: Material(
@@ -468,7 +468,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                       ),
                     ),
-                  )*/
+                  )
                 ],
               ),
             ),
