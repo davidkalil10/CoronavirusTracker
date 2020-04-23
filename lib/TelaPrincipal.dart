@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:coronvavirustracker/LinhadoTempo.dart';
 import 'package:coronvavirustracker/Model/Timeline.dart';
 import 'package:coronvavirustracker/ListaPaises.dart';
 import 'package:coronvavirustracker/Model/Pais.dart';
@@ -141,11 +142,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Widget build(BuildContext context) {
 
     double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.53: 0.38 );
-    Widget graficos = Timeline();
+    //Widget graficos = Timeline();
+    Widget graficos = LinhadoTempo();
 
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.white,
           opacity: 1
@@ -179,7 +181,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             ),
           ],
         ),
-      ),
+      ),*/
       body: Scaffold(
         body: Container(
           child: Center(
@@ -406,7 +408,51 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       ),
                     ),
                   ),
+                 // CircularProgressIndicator(),
+                  //Fonte dados
                   Padding(
+                    padding: EdgeInsets.only(top: 5,left: 20,right: 20),
+                    child: Material(
+                      color: Colors.white,
+                      elevation: 14.0,
+                      borderRadius: BorderRadius.circular(24),
+                      shadowColor: Color(0x802196f3),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  "Fonte dos dados:",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    fontFamily: "Righteous",
+                                  ),
+                                ),
+                                Text(
+                                  "TheVirusTracker.com",
+                                  style: TextStyle(
+                                    //fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    fontFamily: "Daysone",
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+
+                      ),
+                    ),
+                  )
+                  //Card gráfico
+                 /* Padding(
                     padding: EdgeInsets.all(20),
                     child: Container(
                       child: Material(
@@ -422,8 +468,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           ),
                       ),
                     ),
-                  )
-                  //Card gráfico
+                  )*/
                 ],
               ),
             ),

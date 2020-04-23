@@ -153,7 +153,7 @@ class _TimelineState extends State<Timeline> {
 @override
   void initState() {
   initializeDateFormatting("pt_BR");
-  _atualizarTimeline();
+  //_atualizarTimeline();
   }
 
   //Lista cores gradiente
