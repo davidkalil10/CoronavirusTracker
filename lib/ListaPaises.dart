@@ -127,7 +127,7 @@ class _ListaPaisesState extends State<ListaPaises> {
 
 
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white, opacity: 1),
         backgroundColor: Color(0xff598747),
         title: Row(
@@ -160,7 +160,7 @@ class _ListaPaisesState extends State<ListaPaises> {
             ),
           ],
         ),
-      ),
+      ),*/
       body: Container(
         child: Column(
           children: <Widget>[
@@ -184,12 +184,14 @@ class _ListaPaisesState extends State<ListaPaises> {
             Expanded(
               child: ListView.separated(
                   itemBuilder: (context, indice){
-                    return ListTile(
-                      leading: GFAvatar(
-                        backgroundImage: NetworkImage("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png") ?? Image.asset("imagens/mundo.png"),
+                    return
+                      ListTile(
+                      leading: indice == 0 ? Image.asset("imagens/mundo.png") : Image.network("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png"),
+                      /*GFAvatar(
+                        backgroundImage: NetworkImage("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png"),
                         backgroundColor: Colors.white,
                         shape: GFAvatarShape.standard,
-                      ),
+                      )*/
                       onTap: (){
                         print("pais: " + itemsNew[indice].title);
                         setState(() {
