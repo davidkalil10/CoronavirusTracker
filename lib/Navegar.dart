@@ -97,11 +97,13 @@ class _NavegarState extends State<Navegar> {
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
             title: Text("País"),
-            icon: Icon(FontAwesomeIcons.globeAmericas)
+            icon: Icon(FontAwesomeIcons.globeAmericas),
+            activeColor: Colors.blue[500]
           ),
           BottomNavyBarItem(
             title: Text("Dashboard"),
-            icon: Icon(FontAwesomeIcons.tachometerAlt)
+            icon: Icon(FontAwesomeIcons.tachometerAlt),
+            activeColor: Colors.amber[500],
           ),
           BottomNavyBarItem(
             title: Text("Casos"),
@@ -109,7 +111,8 @@ class _NavegarState extends State<Navegar> {
           ),
           BottomNavyBarItem(
             title: Text("Óbitos"),
-            icon: Icon(FontAwesomeIcons.bookDead)
+            icon: Icon(FontAwesomeIcons.bookDead),
+            activeColor: Colors.red
           ),
         ],
       ),

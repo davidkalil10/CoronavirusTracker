@@ -19,7 +19,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
   List _dadosDiarios = [];
   List<DataPoint> pontosCasos =[];
-  DateTime fromDate = DateTime.utc(2020, DateTime.february, 22); //data inicial da API
+  DateTime fromDate = DateTime.utc(2019, DateTime.december, 1); //data inicial da API
   DateTime toDate = DateTime.now();
 
 
@@ -135,46 +135,75 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                 print("apareci");
                 return Material(
                   child: Center(
-                    child: Container(
-                      color: Colors.blueGrey,
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width /1.5,
-                      child:BezierChart(
-                        fromDate: fromDate,
-                        bezierChartScale: BezierChartScale.WEEKLY,
-                        toDate: toDate,
-                        selectedDate: toDate,
-                        series: [
-                          BezierLine(
-                            label: "Casos",
-                            onMissingValue: (dateTime){
-                              if(dateTime.day.isEven){
-                                return 0.0;
-                              }
-                              return 0.0;
-                            },
-                            data: pontosCasos,
+                    child: AspectRatio(
+                        aspectRatio: (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 1.7 : 2.5 ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(18)),
+                        color: Colors.white),
+                        child: Padding(
+                            padding: EdgeInsets.only(right: 0, left: 0,top: 0,bottom: 0),
+                          child: BezierChart(
+                            fromDate: fromDate,
+                            bezierChartScale: BezierChartScale.WEEKLY,
+                            toDate: toDate,
+                            selectedDate: toDate,
+                            series: [
+                              BezierLine(
+                                label: "Casos",
+                                lineColor: Color(0xff28B4C8),
+                                onMissingValue: (dateTime){
+                                  if(dateTime.day.isEven){
+                                    return 0.0;
+                                  }
+                                  return 0.0;
+                                },
+                                data: pontosCasos,
+                              ),
+                            ],
+                            config: BezierChartConfig(
+                              verticalIndicatorStrokeWidth: 3.0,
+                              verticalIndicatorColor: Colors.black26,
+                              pinchZoom: true,
+                              showVerticalIndicator: true,
+                              verticalIndicatorFixedPosition: false,
+                              backgroundColor: Colors.grey,
+                              displayDataPointWhenNoValue: false,
+                              xLinesColor: Colors.black26,
+                              backgroundGradient: LinearGradient(
+                                colors: [
+                                  Colors.white,
+                                  Colors.white,
+                                  Colors.white,
+                                  Colors.white,
+                                  Colors.white,
+                                ],
+                                /*colors: [
+                                  Colors.red[300],
+                                  Colors.red[400],
+                                  Colors.red[400],
+                                  Colors.red[500],
+                                  Colors.red,
+                                ],*/
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              displayLinesXAxis: true,
+                              footerHeight: 60.0,
+                              snap: false,
+                              displayYAxis: false,
+                              //stepsYAxis: 200,
+                              xAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                              yAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black26),
+                              //bubbleIndicatorColor: Color(0xff28B4C8), // cor da caixa de texto
+                              bubbleIndicatorColor: Colors.white.withOpacity(0.9), // cor da caixa de texto
+                              bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey,fontFamily: "Righteous",),
+                              bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueGrey,fontFamily: "Righteous",),
+                              bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueGrey,fontFamily: "Daysone",),
+                            ),
                           ),
-                        ],
-                        config: BezierChartConfig(
-                          verticalIndicatorStrokeWidth: 3.0,
-                          verticalIndicatorColor: Colors.black26,
-                          pinchZoom: true,
-                          showVerticalIndicator: true,
-                          verticalIndicatorFixedPosition: false,
-                          backgroundColor: Colors.green,
-                          footerHeight: 30.0,
-                          snap: false,
-                          displayYAxis: false,
-                          //stepsYAxis: 200,
-                          xAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                          yAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                          bubbleIndicatorColor: Colors.black, // cor da caixa de texto
-                          bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
-                          bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
-                          bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),
                         ),
-                      ),
+                      )
                     ),
                   ),
                 );
