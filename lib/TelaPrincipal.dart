@@ -108,7 +108,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       _textoSalvo = prefs.getString("code") ?? "-";
       dropdownIndicadores = prefs.getString("indicador") ?? "Casos";
       dropdownAgrupamento = prefs.getString("agrupamento") ?? "Totais";
-      dropdownPeriodo = prefs.getString("periodo") ?? "Totais";
+      dropdownPeriodo = prefs.getString("periodo") ?? "Todos";
       String _corGraf = prefs.getString("cor") ?? Color(0xff28B4C8).toString();
 
       String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
@@ -169,12 +169,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   DateFormat formatoHora;
   DateFormat formatoData;
   List<String> listaIndicadores = ["Casos", "Óbitos"];
-  String dropdownIndicadores = "Casos";
+  String dropdownIndicadores;
   var listaAgrupamento = ["Totais", "Diários"];
-  String dropdownAgrupamento = "Totais";
+  String dropdownAgrupamento;
   //var listaPeriodo = ["Totais", "Último mês", "Última Semana"];
   var listaPeriodo = ["Todos","Último mês", "Última Semana"];
-  String dropdownPeriodo = "Todos";
+  String dropdownPeriodo;
   Color corGrafico = Color(0xff28B4C8);
  // List _paises =[];
  // var _codigoPais = ["-"];
