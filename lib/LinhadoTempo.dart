@@ -32,8 +32,8 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
       _textoSalvo = prefs.getString("code") ?? "-";
 
       _selecaoIndicador = prefs.getString("indicador") ?? "Casos";
-      _selecaoAgrupamento = prefs.getString("agrupamento") ?? "Acumulados";
-      _selecaoPeriodo = prefs.getString("periodo") ?? "Totais";
+      _selecaoAgrupamento = prefs.getString("agrupamento") ?? "Totais";
+      _selecaoPeriodo = prefs.getString("periodo") ?? "Todos";
       _corGraf = prefs.getString("cor") ?? Color(0xff28B4C8).toString();
 
       String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
@@ -106,13 +106,13 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
         //pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
 
         if (_selecaoIndicador == "Casos"){
-          if (_selecaoAgrupamento == "Acumulados"){
+          if (_selecaoAgrupamento == "Totais"){
             pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
           }else if (_selecaoAgrupamento == "Diários"){
             pontosCasos.add(DataPoint<DateTime>(value: novosCasos, xAxis: dataRotativa));
           }
         }else if (_selecaoIndicador == "Óbitos"){
-          if (_selecaoAgrupamento == "Acumulados"){
+          if (_selecaoAgrupamento == "Totais"){
             pontosCasos.add(DataPoint<DateTime>(value: totalMortes, xAxis: dataRotativa));
           }else if (_selecaoAgrupamento == "Diários"){
             pontosCasos.add(DataPoint<DateTime>(value: novasMortes, xAxis: dataRotativa));

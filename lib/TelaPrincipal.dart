@@ -107,7 +107,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     setState(() {
       _textoSalvo = prefs.getString("code") ?? "-";
       dropdownIndicadores = prefs.getString("indicador") ?? "Casos";
-      dropdownAgrupamento = prefs.getString("agrupamento") ?? "Acumulados";
+      dropdownAgrupamento = prefs.getString("agrupamento") ?? "Totais";
       dropdownPeriodo = prefs.getString("periodo") ?? "Totais";
       String _corGraf = prefs.getString("cor") ?? Color(0xff28B4C8).toString();
 
@@ -170,10 +170,11 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   DateFormat formatoData;
   List<String> listaIndicadores = ["Casos", "Óbitos"];
   String dropdownIndicadores = "Casos";
-  var listaAgrupamento = ["Acumulados", "Diários"];
-  String dropdownAgrupamento = "Acumulados";
-  var listaPeriodo = ["Totais", "Último mês", "Última Semana"];
-  String dropdownPeriodo = "Totais";
+  var listaAgrupamento = ["Totais", "Diários"];
+  String dropdownAgrupamento = "Totais";
+  //var listaPeriodo = ["Totais", "Último mês", "Última Semana"];
+  var listaPeriodo = ["Todos","Último mês", "Última Semana"];
+  String dropdownPeriodo = "Todos";
   Color corGrafico = Color(0xff28B4C8);
  // List _paises =[];
  // var _codigoPais = ["-"];
@@ -595,15 +596,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                               _salvarReferencias();
                                             });
                                           },
-                                          items: listaAgrupamento.map<DropdownMenuItem<String>>((String value){
+                                          items: listaAgrupamento.map<DropdownMenuItem<String>>((String value2){
                                             return DropdownMenuItem<String>(
-                                              value: value,
+                                              value: value2,
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: <Widget>[
                                                   Text(
-                                                    value,
+                                                    value2,
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontFamily: "Daysone",
@@ -633,15 +634,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                               _salvarReferencias();
                                             });
                                           },
-                                          items: listaPeriodo.map<DropdownMenuItem<String>>((String value){
+                                          items: listaPeriodo.map<DropdownMenuItem<String>>((String value3){
                                             return DropdownMenuItem<String>(
-                                              value: value,
+                                              value: value3,
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: <Widget>[
                                                   Text(
-                                                    value,
+                                                    value3,
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontFamily: "Daysone",
