@@ -31,6 +31,15 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
     setState(() {
       _textoSalvo = prefs.getString("code") ?? "-";
 
+      _selecaoIndicador = prefs.getString("indicador") ?? "Casos";
+      _selecaoAgrupamento = prefs.getString("agrupamento") ?? "Acumulados";
+      _selecaoPeriodo = prefs.getString("periodo") ?? "Totais";
+      _corGraf = prefs.getString("cor") ?? Color(0xff28B4C8).toString();
+
+      String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
+      int ret = int.parse(valueString, radix: 16);
+      _corGrafico = new Color(ret);
+
     });
     print("peguei o: $_textoSalvo");
 
@@ -94,7 +103,23 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
       //Carregar dados na lista da memória e setar no gráfico
       setState(() {
         _dadosDiarios.add(DadoDia(data: data, novosCasos: novosCasos,novasMortes: novasMortes,totalCasos: totalCasos,totalMortes: totalMortes, totalRecuperacao: totalRecuperacao ));
-        pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
+        //pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
+
+        if (_selecaoIndicador == "Casos"){
+          if (_selecaoAgrupamento == "Acumulados"){
+            pontosCasos.add(DataPoint<DateTime>(value: totalCasos, xAxis: dataRotativa));
+          }else if (_selecaoAgrupamento == "Diários"){
+            pontosCasos.add(DataPoint<DateTime>(value: novosCasos, xAxis: dataRotativa));
+          }
+        }else if (_selecaoIndicador == "Óbitos"){
+          if (_selecaoAgrupamento == "Acumulados"){
+            pontosCasos.add(DataPoint<DateTime>(value: totalMortes, xAxis: dataRotativa));
+          }else if (_selecaoAgrupamento == "Diários"){
+            pontosCasos.add(DataPoint<DateTime>(value: novasMortes, xAxis: dataRotativa));
+          }
+        }
+
+
       });
 
     }
@@ -104,6 +129,12 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
 
   //Variáveis iniciais
+  String _selecaoIndicador = "";
+  String _selecaoAgrupamento = "";
+  String _selecaoPeriodo = "";
+  String _corGraf= "";
+  Color _corGrafico;
+
   String _textoSalvo = "";
   Future <bool> _future;
 
@@ -148,10 +179,11 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                             bezierChartScale: BezierChartScale.WEEKLY,
                             toDate: toDate,
                             selectedDate: toDate,
+                            //selectedValue: 30,
                             series: [
                               BezierLine(
-                                label: "Casos",
-                                lineColor: Color(0xff28B4C8),
+                                label: _selecaoIndicador,
+                                lineColor: _corGrafico,
                                 onMissingValue: (dateTime){
                                   if(dateTime.day.isEven){
                                     return 0.0;
@@ -178,7 +210,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                                   Colors.white,
                                   Colors.white,
                                 ],
-                                /*colors: [
+                               /* colors: [
                                   Colors.red[300],
                                   Colors.red[400],
                                   Colors.red[400],
@@ -197,9 +229,9 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                               yAxisTextStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black26),
                               //bubbleIndicatorColor: Color(0xff28B4C8), // cor da caixa de texto
                               bubbleIndicatorColor: Colors.white.withOpacity(0.9), // cor da caixa de texto
-                              bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey,fontFamily: "Righteous",),
-                              bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueGrey,fontFamily: "Righteous",),
-                              bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueGrey,fontFamily: "Daysone",),
+                              bubbleIndicatorLabelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blueGrey,fontFamily: "Daysone",),
+                              bubbleIndicatorTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blueGrey,fontFamily: "Daysone",),
+                              bubbleIndicatorValueStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.normal,color: Colors.blueGrey,fontFamily: "Daysone",),
                             ),
                           ),
                         ),

@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 
@@ -101,12 +102,56 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
 
   _recuperar() async{
+
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _textoSalvo = prefs.getString("code") ?? "-";
+      dropdownIndicadores = prefs.getString("indicador") ?? "Casos";
+      dropdownAgrupamento = prefs.getString("agrupamento") ?? "Acumulados";
+      dropdownPeriodo = prefs.getString("periodo") ?? "Totais";
+      String _corGraf = prefs.getString("cor") ?? Color(0xff28B4C8).toString();
+
+      String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
+      int ret = int.parse(valueString, radix: 16);
+      corGrafico = new Color(ret);
+
       print("texto lido: $_textoSalvo");
       _atualizarCasos();
     });
+
+  }
+
+
+  _salvarReferencias() async{
+
+    final prefs = await SharedPreferences.getInstance();
+    String selecaoIndicador = dropdownIndicadores;
+    String selecaoAgrupamento = dropdownAgrupamento;
+    String selecaoPeriodo = dropdownPeriodo;
+    String corGraf= "";
+
+    //recuperar cor de string e passar para cor de volta
+    /*String valueString = corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
+    int ret = int.parse(valueString, radix: 16);
+    Color otherColor = new Color(ret);
+    print(otherColor == corGrafico);*/
+
+    if (selecaoIndicador == "Casos"){
+      corGraf = Color(0xff28B4C8).toString();
+    }else{
+      corGraf = Color(0xffE4B949).toString();
+    }
+
+    //Salvar info no BD
+    await prefs.setString("indicador", selecaoIndicador);
+    await prefs.setString("agrupamento", selecaoAgrupamento);
+    await prefs.setString("periodo", selecaoPeriodo);
+    await prefs.setString("cor", corGraf);
+
+    print("F1: $selecaoIndicador , F2: $selecaoAgrupamento, F3: $selecaoPeriodo");
+
+    //Renderizar gráfico
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> TelaPrincipal()));
 
   }
 
@@ -123,13 +168,21 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   String horaAtualizacao = "--:-- --/--";
   DateFormat formatoHora;
   DateFormat formatoData;
-  //var paises = ["-"]; //["BR", "US", "AU", "CA","CH","CL","CN","DK","EU","GB","HK","IN","IS","JP","KR","NZ","PL","RU","SE","SG","TH","TW"]
+  List<String> listaIndicadores = ["Casos", "Óbitos"];
+  String dropdownIndicadores = "Casos";
+  var listaAgrupamento = ["Acumulados", "Diários"];
+  String dropdownAgrupamento = "Acumulados";
+  var listaPeriodo = ["Totais", "Último mês", "Última Semana"];
+  String dropdownPeriodo = "Totais";
+  Color corGrafico = Color(0xff28B4C8);
  // List _paises =[];
  // var _codigoPais = ["-"];
 
 
+
   @override
   void initState() {
+
     initializeDateFormatting("pt_BR");
     _recuperar();
 
@@ -140,14 +193,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
 
   Widget build(BuildContext context) {
-
+    Widget graficos = LinhadoTempo();
     double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.53: 0.38 );
     //Widget graficos = Timeline();
-    Widget graficos = LinhadoTempo();
+    //Widget graficos = LinhadoTempo();
 
 
     return Scaffold(
-      /*appBar: AppBar(
+      appBar: AppBar(
         iconTheme: IconThemeData(
           color: Colors.white,
           opacity: 1
@@ -181,7 +234,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             ),
           ],
         ),
-      ),*/
+      ),
       body: Scaffold(
         body: Container(
           child: Center(
@@ -239,23 +292,34 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                     fontFamily: "Righteous",
                                   ),
                                 ),
-                                FlatButton(
-                                    onPressed: (){
-                                      setState(() {
-                                        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> ListaPaises()));
-                                        //dropdownValue = newValue;
-                                        //_atualizarCasos();
-                                      });
+                                Material(
+                                  color: Colors.blue[50],
+                                  elevation: 5.0,
+                                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                                  shadowColor: Color(0x802196f3),
+                                  child: FlatButton(
+                                      onPressed: (){
+                                        setState(() {
+                                          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> ListaPaises()));
+                                          //dropdownValue = newValue;
+                                          //_atualizarCasos();
+                                        });
 
-                                    },
-                                    child: Text(
-                                      _textoSalvo,
-                                      style: TextStyle(
-                                        fontSize: 40,
-                                        fontFamily: "Daysone",
-                                        color: Color(0xff59AA91),
-                                      ),
-                                    )
+                                      },
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            _textoSalvo,
+                                            style: TextStyle(
+                                              fontSize: 40,
+                                              fontFamily: "Daysone",
+                                              color: Colors.blue[300],
+                                            ),
+                                          ),
+                                          Icon(FontAwesomeIcons.caretDown,color:Colors.blue[400])
+                                        ],
+                                      )
+                                  ),
                                 )
                                 ,
                                 Text(
@@ -456,16 +520,147 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                     padding: EdgeInsets.all(20),
                     child: Container(
                       child: Material(
-                          color: Colors.white,
-                          elevation: 14.0,
-                          borderRadius: BorderRadius.circular(24),
-                          shadowColor: Color(0x802196f3),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: (MediaQuery.of(context).size.width*fatorAjusteGrafico),
-                            //height: MediaQuery.of(context).size.height,
-                            child: graficos,
-                          ),
+                        color: Colors.white,
+                        elevation: 14.0,
+                        borderRadius: BorderRadius.circular(24),
+                        shadowColor: Color(0x802196f3),
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: (MediaQuery.of(context).size.width*fatorAjusteGrafico),
+                              //height: MediaQuery.of(context).size.height,
+                              child: graficos,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 34,
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    //Primeiro Filtro
+                                    Material(
+                                      color: Colors.blue[50],
+                                      elevation: 1.0,
+                                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                                      shadowColor: Color(0x802196f3),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: DropdownButton(
+                                          value: dropdownIndicadores,
+                                          onChanged: (String newValue){
+                                            setState(() {
+                                              dropdownIndicadores = newValue;
+                                              _salvarReferencias();
+                                            });
+                                          },
+                                          items: listaIndicadores.map<DropdownMenuItem<String>>((String value){
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: "Daysone",
+                                                      color: corGrafico.withOpacity(1.0),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                    //Segundo Filtro
+                                    Material(
+                                      color: Colors.blue[50],
+                                      elevation: 1.0,
+                                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                                      shadowColor: Color(0x802196f3),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: DropdownButton(
+                                          value: dropdownAgrupamento,
+                                          onChanged: (String newValue){
+                                            setState(() {
+                                              dropdownAgrupamento = newValue;
+                                              _salvarReferencias();
+                                            });
+                                          },
+                                          items: listaAgrupamento.map<DropdownMenuItem<String>>((String value){
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: "Daysone",
+                                                      color: corGrafico.withOpacity(1.0),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    ),
+                                    //Terceiro Filtro
+                                    Material(
+                                      color: Colors.blue[50],
+                                      elevation: 1.0,
+                                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                                      shadowColor: Color(0x802196f3),
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: DropdownButton(
+                                          value: dropdownPeriodo,
+                                          onChanged: (String newValue){
+                                            setState(() {
+                                              dropdownPeriodo = newValue;
+                                              _salvarReferencias();
+                                            });
+                                          },
+                                          items: listaPeriodo.map<DropdownMenuItem<String>>((String value){
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text(
+                                                    value,
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily: "Daysone",
+                                                      color: corGrafico.withOpacity(1.0),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   )

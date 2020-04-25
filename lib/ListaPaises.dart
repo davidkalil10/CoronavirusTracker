@@ -69,6 +69,7 @@ class _ListaPaisesState extends State<ListaPaises> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("code", paisSelecionado);
     print("Salvar: $paisSelecionado");
+    //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> Navegar()));
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> TelaPrincipal()));
 
   }
@@ -115,6 +116,8 @@ class _ListaPaisesState extends State<ListaPaises> {
 
   }
 
+
+
   @override
   void initState() {
     _CarregarPaises();
@@ -122,12 +125,13 @@ class _ListaPaisesState extends State<ListaPaises> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
 
 
     return Scaffold(
-      /*appBar: AppBar(
+      appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white, opacity: 1),
         backgroundColor: Color(0xff598747),
         title: Row(
@@ -160,7 +164,7 @@ class _ListaPaisesState extends State<ListaPaises> {
             ),
           ],
         ),
-      ),*/
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -186,7 +190,7 @@ class _ListaPaisesState extends State<ListaPaises> {
                   itemBuilder: (context, indice){
                     return
                       ListTile(
-                      leading: indice == 0 ? Image.asset("imagens/mundo.png") : Image.network("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png"),
+                      leading: indice == 0 && itemsNew[indice].code.toString() == "-" ? Image.asset("imagens/mundo.png") : Image.network("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png"),
                       /*GFAvatar(
                         backgroundImage: NetworkImage("https://www.countryflags.io/" + itemsNew[indice].code.toString() + "/shiny/64.png"),
                         backgroundColor: Colors.white,

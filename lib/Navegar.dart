@@ -6,6 +6,7 @@ import 'package:coronvavirustracker/Home.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Navegar extends StatefulWidget {
@@ -18,9 +19,12 @@ class _NavegarState extends State<Navegar> {
   int _currentIndex = 0;
   PageController _pageController;
 
+
+
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController();
   }
 

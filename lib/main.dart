@@ -7,7 +7,7 @@ import 'package:coronvavirustracker/TelaPrincipal.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
-  home: Navegar(),
+  home: TelaPrincipal(),
   //home: Home(),
   debugShowCheckedModeBanner: false,
 ));
