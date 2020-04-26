@@ -223,7 +223,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   Widget build(BuildContext context) {
     Widget graficos = LinhadoTempo();
-    double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.53: 0.38 );
+    double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.27: 0.71 );
     //Widget graficos = Timeline();
     //Widget graficos = LinhadoTempo();
 
@@ -544,7 +544,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       ),
                     ),
                   )*/
-                  Padding(
+                  //Titulo grafico e icone informações
+                  /*Padding(
                     padding: EdgeInsets.only(top: 20,right: 20,left: 20,bottom: 20),
                     child: Container(
                       child: Material(
@@ -577,7 +578,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   //Card gráfico
                   Padding(
                     padding: EdgeInsets.only(left: 20,right: 20),
@@ -587,141 +588,196 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                         elevation: 14.0,
                         borderRadius: BorderRadius.circular(24),
                         shadowColor: Color(0x802196f3),
-                        child: Stack(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: (MediaQuery.of(context).size.width*fatorAjusteGrafico),
-                              //height: MediaQuery.of(context).size.height,
-                              child: graficos,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: 34,
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Stack(
+                              alignment: Alignment.topCenter,
+                              children: <Widget>[
+                                Column(
                                   children: <Widget>[
-                                    //Primeiro Filtro
-                                    Material(
-                                      color: corBotao,
-                                      elevation: 1.0,
-                                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                                      shadowColor: Color(0x802196f3),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: (MediaQuery.of(context).size.width)/9,
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: DropdownButton(
-                                          value: dropdownIndicadores,
-                                          onChanged: (String newValue){
-                                            setState(() {
-                                              dropdownIndicadores = newValue;
-                                              _salvarReferencias();
-                                            });
-                                          },
-                                          items: listaIndicadores.map<DropdownMenuItem<String>>((String value){
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    value,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: "Daysone",
-                                                      color: corGrafico.withOpacity(1.0),
-                                                    ),
-                                                  )
-                                                ],
+                                        padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            /*IconButton(
+                                        icon: Icon(Icons.info_outline),
+                                        onPressed: (){},
+                                        tooltip: "Gire o celular para uma melhor experiência",
+                                      ),*/
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 10,top: 0),
+                                              child: Text(
+                                                tituloGrafico,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                  fontFamily: "Righteous",
+                                                ),
                                               ),
-                                            );
-                                          }).toList(),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(Icons.info_outline),
+                                              onPressed: (){},
+                                              tooltip: "Gire o celular para uma melhor experiência",
+                                            )
+                                            /*IconButton(
+                                        icon: Icon(Icons.info_outline),
+                                        onPressed: (){},
+                                        tooltip: "Fonte dos dados: TheVirusTracker.com",
+                                      )*/
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    //Segundo Filtro
-                                    Material(
-                                      color: corBotao,
-                                      elevation: 1.0,
-                                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                                      shadowColor: Color(0x802196f3),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 24,
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: DropdownButton(
-                                          value: dropdownAgrupamento,
-                                          onChanged: (String newValue){
-                                            setState(() {
-                                              dropdownAgrupamento = newValue;
-                                              _salvarReferencias();
-                                            });
-                                          },
-                                          items: listaAgrupamento.map<DropdownMenuItem<String>>((String value2){
-                                            return DropdownMenuItem<String>(
-                                              value: value2,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    value2,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: "Daysone",
-                                                      color: corGrafico.withOpacity(1.0),
-                                                    ),
-                                                  )
-                                                ],
+                                        padding: EdgeInsets.only(top: 00,left: 10,right: 10),
+                                        child: Row(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            //Primeiro Filtro
+                                            Material(
+                                              color: corBotao,
+                                              elevation: 1.0,
+                                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                                              shadowColor: Color(0x802196f3),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(left: 10),
+                                                child: DropdownButton(
+                                                  value: dropdownIndicadores,
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      dropdownIndicadores = newValue;
+                                                      _salvarReferencias();
+                                                    });
+                                                  },
+                                                  items: listaIndicadores.map<DropdownMenuItem<String>>((String value){
+                                                    return DropdownMenuItem<String>(
+                                                      value: value,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            value,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontFamily: "Daysone",
+                                                              color: corGrafico.withOpacity(1.0),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               ),
-                                            );
-                                          }).toList(),
-                                        ),
-                                      ),
-                                    ),
-                                    //Terceiro Filtro
-                                    Material(
-                                      color: corBotao,
-                                      elevation: 1.0,
-                                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                                      shadowColor: Color(0x802196f3),
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 10),
-                                        child: DropdownButton(
-                                          value: dropdownPeriodo,
-                                          onChanged: (String newValue){
-                                            setState(() {
-                                              dropdownPeriodo = newValue;
-                                              _salvarReferencias();
-                                            });
-                                          },
-                                          items: listaPeriodo.map<DropdownMenuItem<String>>((String value3){
-                                            return DropdownMenuItem<String>(
-                                              value: value3,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: <Widget>[
-                                                  Text(
-                                                    value3,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: "Daysone",
-                                                      color: corGrafico.withOpacity(1.0),
-                                                    ),
-                                                  )
-                                                ],
+                                            ),
+                                            //Segundo Filtro
+                                            Material(
+                                              color: corBotao,
+                                              elevation: 1.0,
+                                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                                              shadowColor: Color(0x802196f3),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(left: 10),
+                                                child: DropdownButton(
+                                                  value: dropdownAgrupamento,
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      dropdownAgrupamento = newValue;
+                                                      _salvarReferencias();
+                                                    });
+                                                  },
+                                                  items: listaAgrupamento.map<DropdownMenuItem<String>>((String value2){
+                                                    return DropdownMenuItem<String>(
+                                                      value: value2,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            value2,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontFamily: "Daysone",
+                                                              color: corGrafico.withOpacity(1.0),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
                                               ),
-                                            );
-                                          }).toList(),
+                                            ),
+                                            //Terceiro Filtro
+                                            Material(
+                                              color: corBotao,
+                                              elevation: 1.0,
+                                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                                              shadowColor: Color(0x802196f3),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(left: 10),
+                                                child: DropdownButton(
+                                                  value: dropdownPeriodo,
+                                                  onChanged: (String newValue){
+                                                    setState(() {
+                                                      dropdownPeriodo = newValue;
+                                                      _salvarReferencias();
+                                                    });
+                                                  },
+                                                  items: listaPeriodo.map<DropdownMenuItem<String>>((String value3){
+                                                    return DropdownMenuItem<String>(
+                                                      value: value3,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            value3,
+                                                            style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontFamily: "Daysone",
+                                                              color: corGrafico.withOpacity(1.0),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                              ),
+                                            )
+                                          ],
                                         ),
                                       ),
                                     )
                                   ],
                                 ),
-                              ),
+                            ],
                             ),
+                            Stack(
+                              alignment: Alignment.topCenter,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: (MediaQuery.of(context).size.height*fatorAjusteGrafico),
+                                  //height: MediaQuery.of(context).size.height,
+                                  child: graficos,
+                                ),
+
+                              ],
+                            )
                           ],
                         ),
                       ),

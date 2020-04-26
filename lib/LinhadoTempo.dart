@@ -221,16 +221,16 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                               pinchZoom: true,
                               showVerticalIndicator: true,
                               verticalIndicatorFixedPosition: false,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: Colors.transparent,
                               displayDataPointWhenNoValue: false,
                               xLinesColor: Colors.black26,
-                              backgroundGradient: LinearGradient(
+                             /* backgroundGradient: LinearGradient(
                                 colors: [
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
-                                  Colors.white,
+                                  Colors.white.withOpacity(1),
+                                  Colors.white.withOpacity(1),
+                                  Colors.white.withOpacity(1),
+                                  Colors.white.withOpacity(1),
+                                  Colors.white.withOpacity(1),
                                 ],
                                /* colors: [
                                   Colors.red[300],
@@ -241,7 +241,7 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                                 ],*/
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                              ),
+                              ),*/
                               displayLinesXAxis: true,
                               footerHeight: 60.0,
                               snap: false,
