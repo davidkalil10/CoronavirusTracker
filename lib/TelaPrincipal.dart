@@ -40,7 +40,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     //Mascara para formatação dos milhares
     var f = NumberFormat('#,###', "pt_BR");
     var f2 = NumberFormat('##.##', "pt_BR");
-    var d = DateFormat('kk:mm d/MM','pt_BR');
+    var d = DateFormat('HH:mm d/MM','pt_BR');
 
     print("rodei");
 
@@ -82,7 +82,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     //Mascara para formatação dos milhares
     var f = NumberFormat('#,###', "pt_BR");
     var f2 = NumberFormat('##.##', "pt_BR");
-    var d = DateFormat('hh:mm d/MM','pt_BR');
+    var d = DateFormat('HH:mm d/MM','pt_BR');
 
     setState(() {
       nomePais = retorno["countrydata"][0]["info"]["title"].toString();
@@ -114,6 +114,12 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
       int ret = int.parse(valueString, radix: 16);
       corGrafico = new Color(ret);
+
+      if (dropdownIndicadores == "Casos"){
+      corBotao = Colors.blue[50];
+      }else if(dropdownIndicadores=="Óbitos"){
+        corBotao = Colors.yellow[50];
+      }
 
       print("texto lido: $_textoSalvo");
       _atualizarCasos();
@@ -176,6 +182,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   var listaPeriodo = ["Todos","Último mês", "Última Semana"];
   String dropdownPeriodo;
   Color corGrafico = Color(0xff28B4C8);
+  Color corBotao = Colors.blue[50];
  // List _paises =[];
  // var _codigoPais = ["-"];
 
@@ -544,7 +551,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   children: <Widget>[
                                     //Primeiro Filtro
                                     Material(
-                                      color: Colors.blue[50],
+                                      color: corBotao,
                                       elevation: 1.0,
                                       borderRadius: BorderRadius.all(Radius.circular(50)),
                                       shadowColor: Color(0x802196f3),
@@ -582,7 +589,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                     ),
                                     //Segundo Filtro
                                     Material(
-                                      color: Colors.blue[50],
+                                      color: corBotao,
                                       elevation: 1.0,
                                       borderRadius: BorderRadius.all(Radius.circular(50)),
                                       shadowColor: Color(0x802196f3),
@@ -620,7 +627,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                     ),
                                     //Terceiro Filtro
                                     Material(
-                                      color: Colors.blue[50],
+                                      color: corBotao,
                                       elevation: 1.0,
                                       borderRadius: BorderRadius.all(Radius.circular(50)),
                                       shadowColor: Color(0x802196f3),

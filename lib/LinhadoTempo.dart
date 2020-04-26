@@ -25,6 +25,14 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
 
   Future <bool> _atualizarLinhadoTempo(String textoSalvo) async{
 
+
+    //Definir data de hoje e subtrair a data inicial para ter os dados , 1/22/20
+    var dataHoje = new DateTime.utc(toDate.year, toDate.month, toDate.day); //data hoje limpa
+    var dataRotativa = fromDate;
+
+    Duration difference = dataHoje.difference(fromDate);
+    int diasBase = difference.inDays; // total de dias a pesquisar
+
     //recupera shared preferences
 
     final prefs = await SharedPreferences.getInstance();
@@ -39,6 +47,19 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
       String valueString = _corGraf.split('(0x')[1].split(')')[0]; // kind of hacky..
       int ret = int.parse(valueString, radix: 16);
       _corGrafico = new Color(ret);
+
+      //Filtrar período
+      if (_selecaoPeriodo == "Todos"){
+        fromDate = DateTime.utc(2019, DateTime.december, 1);
+        dataRotativa = fromDate;
+
+      }else if(_selecaoPeriodo == "Último mês"){
+        dataRotativa = dataHoje.subtract(Duration(days: 30));
+        fromDate = dataRotativa;
+      }else if(_selecaoPeriodo =="Última Semana"){
+        dataRotativa = dataHoje.subtract(Duration(days: 6));
+        fromDate = dataRotativa;
+      }
 
     });
     print("peguei o: $_textoSalvo");
@@ -59,17 +80,6 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
     response = await http.get(url);
     Map<String, dynamic> retorno = json.decode(response.body);
 
-
-    //Definir data de hoje e subtrair a data inicial para ter os dados , 1/22/20
-    var dataHoje = new DateTime.utc(toDate.year, toDate.month, toDate.day); //data hoje limpa
-    var dataRotativa = fromDate;
-
-   /* setState(() {
-      toDate = dataHoje.subtract(Duration(days: 1));
-    });*/
-
-    Duration difference = dataHoje.difference(fromDate);
-    int diasBase = difference.inDays; // total de dias a pesquisar
 
     //Loop para adicionar o JSON na memoria
 
