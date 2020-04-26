@@ -117,9 +117,18 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
       if (dropdownIndicadores == "Casos"){
       corBotao = Colors.blue[50];
+
       }else if(dropdownIndicadores=="Óbitos"){
         corBotao = Colors.yellow[50];
+
       }
+
+      if (dropdownAgrupamento == "Totais"){
+        tituloGrafico = dropdownIndicadores + " Acumulados";
+      }else{
+        tituloGrafico = dropdownIndicadores + " Diários";
+      }
+
 
       print("texto lido: $_textoSalvo");
       _atualizarCasos();
@@ -162,6 +171,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   }
 
 
+
   //Variáveis iniciais
  // String dropdownValue = "-";
   String _textoSalvo = "";
@@ -183,6 +193,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   String dropdownPeriodo;
   Color corGrafico = Color(0xff28B4C8);
   Color corBotao = Colors.blue[50];
+  String tituloGrafico = "";
  // List _paises =[];
  // var _codigoPais = ["-"];
 
@@ -197,9 +208,19 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   }
 
   @override
+  dispose(){
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
 
 
 
+  @override
   Widget build(BuildContext context) {
     Widget graficos = LinhadoTempo();
     double fatorAjusteGrafico = (MediaQuery.of(context).size.height > MediaQuery.of(context).size.width? 0.53: 0.38 );
@@ -523,9 +544,43 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       ),
                     ),
                   )*/
+                  Padding(
+                    padding: EdgeInsets.only(top: 20,right: 20,left: 20,bottom: 20),
+                    child: Container(
+                      child: Material(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        shadowColor: Color(0x802196f3),
+                        elevation: 10.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.info_outline),
+                              onPressed: (){},
+                              tooltip: "Gire o celular para uma melhor experiência",
+                            ),
+                            Text(
+                              tituloGrafico,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                fontFamily: "Righteous",
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.info_outline),
+                              onPressed: (){},
+                              tooltip: "Fonte dos dados: TheVirusTracker.com",
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   //Card gráfico
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(left: 20,right: 20),
                     child: Container(
                       child: Material(
                         color: Colors.white,
@@ -666,7 +721,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   ],
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),

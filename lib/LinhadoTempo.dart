@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:bezier_chart/bezier_chart.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:date_format/date_format.dart';
 import 'package:coronvavirustracker/Model/InfoDiaria.dart';
+import 'package:intl/intl.dart' as intl;
 
 
 class LinhadoTempo extends StatefulWidget {
@@ -189,10 +189,20 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                             bezierChartScale: BezierChartScale.WEEKLY,
                             toDate: toDate,
                             selectedDate: toDate,
+                            footerDateTimeBuilder: (DateTime value, BezierChartScale scaleType) {
+                              final newFormat = intl.DateFormat('dd\nMMM',"pt_BR");
+                              return newFormat.format(value);
+                            },
+                            bubbleLabelDateTimeBuilder: (DateTime value, BezierChartScale scaleType) {
+                              final newFormat = intl.DateFormat('EEE d',"pt_BR");
+                              return "${newFormat.format(value)}\n";
+                            },
                             //selectedValue: 30,
                             series: [
                               BezierLine(
                                 label: _selecaoIndicador,
+                                //dataPointFillColor: Colors.black26,
+                                //dataPointStrokeColor: Colors.green,
                                 lineColor: _corGrafico,
                                 onMissingValue: (dateTime){
                                   if(dateTime.day.isEven){
@@ -204,6 +214,8 @@ class _LinhadoTempoState extends State<LinhadoTempo> {
                               ),
                             ],
                             config: BezierChartConfig(
+                              updatePositionOnTap: true, // clique para para mostrar dados
+                              bubbleIndicatorValueFormat: intl.NumberFormat("###,##0", "pt_BR"), // formato numeros
                               verticalIndicatorStrokeWidth: 3.0,
                               verticalIndicatorColor: Colors.black26,
                               pinchZoom: true,
