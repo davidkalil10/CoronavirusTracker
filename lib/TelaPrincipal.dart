@@ -245,13 +245,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 fontFamily: "Righteous",
               ),
             ),
-            /*Text("//",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  fontFamily: "Righteous",
-                ),
-            ),*/
             Icon(Icons.assessment),
             Text("TRACKER",
               style: TextStyle(
@@ -298,7 +291,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                   //Seleção do país
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(top: 20,right: 20, left: 20,bottom: 5),
                     child: Material(
                       color: Colors.white,
                       elevation: 14.0,
@@ -370,7 +363,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                   //Primeiro Card
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(top: 10,right: 20, left: 20,bottom: 10),
                     child: Material(
                       color: Colors.white,
                       elevation: 14.0,
@@ -416,7 +409,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   ),
                   //Segundo Card
                   Padding(
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.only(top: 10,right: 20, left: 20,bottom: 20),
                     child: Container(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -426,7 +419,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                             elevation: 14.0,
                             borderRadius: BorderRadius.circular(24),
                             shadowColor: Color(0x802196f3),
-                            child: Row(
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
@@ -447,7 +440,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                         totalObitos,
                                         style: TextStyle(
                                           //fontWeight: FontWeight.bold,
-                                          fontSize: 31,
+                                          fontSize: 28,
                                           fontFamily: "Daysone",
                                           color: Color(0xffE4B949),
                                         ),
@@ -456,7 +449,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                   ),
                                 ),
                               ],
-
                             ),
                           ),
                           Material(
@@ -485,7 +477,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                         letalidade,
                                         style: TextStyle(
                                           //fontWeight: FontWeight.bold,
-                                          fontSize: 31,
+                                          fontSize: 28,
                                           fontFamily: "Daysone",
                                           color: Color(0xffCD5075),
                                         ),
@@ -501,87 +493,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                       ),
                     ),
                   ),
-                 // CircularProgressIndicator(),
-                  //Fonte dados
-                  /*Padding(
-                    padding: EdgeInsets.only(top: 5,left: 20,right: 20),
-                    child: Material(
-                      color: Colors.white,
-                      elevation: 14.0,
-                      borderRadius: BorderRadius.circular(24),
-                      shadowColor: Color(0x802196f3),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  "Fonte dos dados:",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    fontFamily: "Righteous",
-                                  ),
-                                ),
-                                Text(
-                                  "TheVirusTracker.com",
-                                  style: TextStyle(
-                                    //fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    fontFamily: "Daysone",
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-
-                      ),
-                    ),
-                  )*/
-                  //Titulo grafico e icone informações
-                  /*Padding(
-                    padding: EdgeInsets.only(top: 20,right: 20,left: 20,bottom: 20),
-                    child: Container(
-                      child: Material(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        shadowColor: Color(0x802196f3),
-                        elevation: 10.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            IconButton(
-                              icon: Icon(Icons.info_outline),
-                              onPressed: (){},
-                              tooltip: "Gire o celular para uma melhor experiência",
-                            ),
-                            Text(
-                              tituloGrafico,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                fontFamily: "Righteous",
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.info_outline),
-                              onPressed: (){},
-                              tooltip: "Fonte dos dados: TheVirusTracker.com",
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),*/
                   //Card gráfico
                   Padding(
-                    padding: EdgeInsets.only(left: 20,right: 20),
+                    padding: EdgeInsets.only(left: 20,right: 20,bottom: 10),
                     child: Container(
                       child: Material(
                         color: Colors.white,
@@ -592,6 +506,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
+                            //Stack do titulo e dos botoes de controle
                             Stack(
                               alignment: Alignment.topCenter,
                               children: <Widget>[
@@ -766,6 +681,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                                 ),
                             ],
                             ),
+                            //Stack do grafico
                             Stack(
                               alignment: Alignment.topCenter,
                               children: <Widget>[
