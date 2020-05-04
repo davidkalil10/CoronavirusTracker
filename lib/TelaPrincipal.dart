@@ -11,6 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
+
 
 
 
@@ -23,6 +26,67 @@ class TelaPrincipal extends StatefulWidget {
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
 
+  //configuração ads
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['estatistica', 'beleza', 'virus', "jogos"],
+    contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[],
+  );
+
+
+  InterstitialAd buildInterstitial() {
+    return InterstitialAd(
+        adUnitId: InterstitialAd.testAdUnitId,
+        targetingInfo: MobileAdTargetingInfo(testDevices: <String>[]),
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.loaded) {
+            myInterstitial?.show();
+          }
+          if (event == MobileAdEvent.clicked || event == MobileAdEvent.closed) {
+            myInterstitial.dispose();
+          }
+        });
+  }
+
+  //METODO DE START DO BANNER
+  void startBanner() {
+    myBanner = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.smartBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.opened) {
+          // MobileAdEvent.opened
+          // MobileAdEvent.clicked
+          // MobileAdEvent.closed
+          // MobileAdEvent.failedToLoad
+          // MobileAdEvent.impression
+          // MobileAdEvent.leftApplication
+        }
+        print("BannerAd event is $event");
+      },
+    );
+  }
+
+
+   //METODO DE CHAMADA DO BANNER
+  void displayBanner() {
+    myBanner
+      ..load()
+      ..show(
+        anchorOffset: 0.0,
+        anchorType: AnchorType.bottom,
+      );
+  }
+
+  void displayBannerInter(){
+
+    myInterstitial = buildInterstitial()
+      ..load()
+      ..show();
+
+  }
 
 
   _atualizarMundo() async {
@@ -196,6 +260,9 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   String tituloGrafico = "";
  // List _paises =[];
  // var _codigoPais = ["-"];
+  BannerAd myBanner;
+  InterstitialAd myInterstitial;
+
 
 
 
@@ -205,10 +272,22 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     initializeDateFormatting("pt_BR");
     _recuperar();
 
+    FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-0415944338628908~1854930273");
+
+    startBanner();
+    displayBanner();
+    displayBannerInter();
+
+
   }
 
   @override
   dispose(){
+
+    myBanner?.dispose(); //Dispose do banner
+    myInterstitial?.dispose();
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
